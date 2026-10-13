@@ -23,3 +23,13 @@ fs.writeFileSync('dist/index.html',`<!doctype html>
 <section class="visit"><p class="eyebrow">LET'S CONNECT</p><h2>We're just around the corner.</h2><p>Have a question before you visit? Call or email your local store.</p><a class="button" href="#locations">Contact a store <span aria-hidden="true">↗</span></a></section></main>
 <footer><a class="footer-brand" href="#" aria-label="TBV Wireless home"><img src="assets/tbv-wireless-logo-transparent.png" alt="TBV Wireless" width="1774" height="887"></a><p>Serving our Georgia communities.</p><span>© ${new Date().getFullYear()} TBV Wireless</span><a href="#locations">Store locations</a><p class="design-credit">Designed by Clearframe Web Studio</p></footer><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="app.js"></script><script src="map.js"></script></body></html>`);
 console.log('Built landing page with '+stores.length+' locations.');
+
+const original=fs.readFileSync('dist/index.html','utf8');
+const menu=(active)=>'<nav aria-label="Main navigation"><a class="nav-tab '+(active==='home'?'active':'')+'" href="index.html" '+(active==='home'?'aria-current="page"':'')+'>Home</a><a class="nav-tab '+(active==='locations'?'active':'')+'" href="locations.html" '+(active==='locations'?'aria-current="page"':'')+'>Locations</a><a class="button small" href="locations.html#locations">Find a store ↗</a></nav>';
+const map=original.match(/<div class="hero-map">.*?<\/div><\/section>/s)[0].replace(/<\/section>$/,'');
+const directory=original.match(/<section class="locations".*?<\/section>/s)[0];
+let locations=original.replace(/<main id="main">.*?<\/main>/s,'<main id="main"><section class="locations-intro"><p class="eyebrow">TBV WIRELESS · GEORGIA</p><h1>Our locations.</h1><p>Find your local TBV team at one of our 10 Georgia stores.</p></section><div class="locations-map">'+map+'</div>'+directory+'</main>');
+locations=locations.replace(/<nav aria-label="Main navigation">.*?<\/nav>/s,menu('locations')).replace('<title>TBV Wireless | 10 Georgia Locations</title>','<title>Store Locations | TBV Wireless</title>').replaceAll('class="brand" href="#"','class="brand" href="index.html"').replaceAll('class="footer-brand" href="#"','class="footer-brand" href="index.html"');
+fs.writeFileSync('dist/locations.html',locations);
+const home=original.replace(/<nav aria-label="Main navigation">.*?<\/nav>/s,menu('home')).replaceAll('href="#locations"','href="locations.html#locations"');
+fs.writeFileSync('dist/index.html',home);
