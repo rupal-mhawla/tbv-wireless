@@ -33,3 +33,8 @@ locations=locations.replace(/<nav aria-label="Main navigation">.*?<\/nav>/s,menu
 fs.writeFileSync('dist/locations.html',locations);
 const home=original.replace(/<nav aria-label="Main navigation">.*?<\/nav>/s,menu('home')).replaceAll('href="#locations"','href="locations.html#locations"');
 fs.writeFileSync('dist/index.html',home);
+const cleanLocations=locations.replaceAll('href="index.html"','href="/"').replaceAll('href="locations.html','href="/locations/').replaceAll('src="assets/','src="../assets/').replaceAll('href="styles.css"','href="../styles.css"').replaceAll('src="app.js"','src="../app.js"').replaceAll('src="map.js"','src="../map.js"');
+fs.mkdirSync('dist/locations',{recursive:true});
+fs.writeFileSync('dist/locations/index.html',cleanLocations);
+fs.writeFileSync('dist/index.html',home.replaceAll('href="locations.html','href="/locations/'));
+fs.writeFileSync('dist/locations.html','<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TBV Wireless Locations</title><meta http-equiv="refresh" content="0;url=/locations/"><link rel="canonical" href="https://tbvwireless.com/locations/"></head><body><p><a href="/locations/">View TBV Wireless locations</a></p><script>location.replace("/locations/"+location.search+location.hash);</script></body></html>');
