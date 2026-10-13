@@ -58,3 +58,16 @@ search.addEventListener('input', async () => {
   document.querySelector('#count').textContent = term ? `Showing ${count} of 10 locations` : 'Showing all 10 locations';
   document.querySelector('#empty').hidden = count !== 0;
 });
+
+const locationMenu = document.querySelector(".location-menu");
+locationMenu.addEventListener("click", event => {
+ const link = event.target.closest("a");
+ if (!link) return;
+ search.value = "";
+ search.dispatchEvent(new Event("input"));
+ locationMenu.open = false;
+ const target = document.querySelector(link.getAttribute("href"));
+ if (target?.classList.contains("store")) target.focus({preventScroll:true});
+});
+document.addEventListener("click", event => {if (!locationMenu.contains(event.target)) locationMenu.open=false;});
+locationMenu.addEventListener("keydown", event => {if(event.key === "Escape"){locationMenu.open=false;locationMenu.querySelector("summary").focus();}});
