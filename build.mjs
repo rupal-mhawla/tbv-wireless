@@ -38,3 +38,6 @@ fs.mkdirSync('dist/locations',{recursive:true});
 fs.writeFileSync('dist/locations/index.html',cleanLocations);
 fs.writeFileSync('dist/index.html',home.replaceAll('href="locations.html','href="/locations/'));
 fs.writeFileSync('dist/locations.html','<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TBV Wireless Locations</title><meta http-equiv="refresh" content="0;url=/locations/"><link rel="canonical" href="https://tbvwireless.com/locations/"></head><body><p><a href="/locations/">View TBV Wireless locations</a></p><script>location.replace("/locations/"+location.search+location.hash);</script></body></html>');
+let cleanHome=fs.readFileSync('dist/index.html','utf8').replaceAll('href="index.html"','href="/"');
+cleanHome=cleanHome.replace('<head>','<head><link rel="canonical" href="https://tbvwireless.com/"><script>if(location.pathname==="/index.html")location.replace("/"+location.search+location.hash);</script>');
+fs.writeFileSync('dist/index.html',cleanHome);
